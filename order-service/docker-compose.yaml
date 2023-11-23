@@ -1,0 +1,28 @@
+version: "3.10"
+
+services:
+  db-order-service:
+    image: postgres:15
+    networks:
+      - "microservices"
+    environment:
+        - POSTGRES_USER=order
+        - POSTGRES_PASSWORD=dborder2023
+        - POSTGRES_DB=order
+        - POSTGRES_HOST_AUTH_METHOD=trust
+  order-service:
+    image: douglasyakawe/order-service:0.0.1
+    networks:
+      - "microservices"
+    ports:
+      - "8001:8000"
+    environment:
+        - POSTGRES_USER=order
+        - POSTGRES_PASSWORD=dborder2023
+        - POSTGRES_SERVER=db-order-service
+        - POSTGRES_PORT=5432
+        - POSTGRES_DB=order
+        - MENU_SERVICE_URL=http://menu-service:8000
+networks:
+  microservices:
+    external: true
